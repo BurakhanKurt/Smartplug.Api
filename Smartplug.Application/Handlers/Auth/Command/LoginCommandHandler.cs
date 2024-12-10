@@ -32,7 +32,7 @@ namespace Smartplug.Application.Handlers.Auth.Command
         {
 
             var user = await signInManager.UserManager.Users
-                .Where(u => u.Email == request.Username && !u.IsDeleted)
+                .Where(u => u.UserName == request.Username && !u.IsDeleted)
                 .FirstOrDefaultAsync();
 
             if (user == null || user.IsDeleted)

@@ -13,6 +13,8 @@ using Smartplug.Application.Jwt;
 using System.Reflection;
 using Smartplug.Api.Application.Jwt;
 using Smartplug.Application.Services;
+using Microsoft.Extensions.Options;
+using Smartplug.Persistence.Seeds;
 
 
 
@@ -136,6 +138,10 @@ builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
 });
 var app = builder.Build();
+
+
+RoleSeed.SeedRoles(app.Services).Wait();
+DefaultSeedUsers.SeedDefaultUser(app.Services).Wait();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || true)
