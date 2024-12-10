@@ -9,6 +9,8 @@ using Smartplug.Persistence;
 using System.Text;
 
 using Microsoft.OpenApi.Models;
+using Smartplug.Application.Jwt;
+using System.Reflection;
 
 
 
@@ -109,7 +111,7 @@ builder.Services.AddSwaggerGen(setup =>
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(, builder =>
+    options.AddPolicy(MyAllowSpecificOrigins, builder =>
         builder
         .AllowAnyOrigin()
         .AllowAnyMethod()
@@ -134,9 +136,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseMiddleware<JwtMiddleware>();
 app.MapControllers();
+
 
 app.Run();
