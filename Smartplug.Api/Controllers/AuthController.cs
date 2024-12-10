@@ -34,5 +34,12 @@ namespace Smartplug.Api.Controllers
             var response = await mediator.Send(command);
             return CreateActionResultInstance(response);
         }
+
+        [HttpGet("refreshToken")]
+        public async Task<IActionResult> RefreshToken([FromQuery] RefreshTokenCommand command)
+        {
+            var response = await mediator.Send(command);
+            return CreateActionResultInstance(response);
+        }
     }
 }

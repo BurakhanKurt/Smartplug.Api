@@ -24,6 +24,13 @@ namespace Smartplug.Persistence
             modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("UserRoles");
             modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("UserTokens");
 
+
+            modelBuilder.Entity<Users>().HasMany(u => u.Device).WithOne(d => d.User).HasForeignKey(d => d.UserId);
+            modelBuilder.Entity<Device>().HasMany(d => d.EnergyUsageLogs).WithOne(e => e.Device).HasForeignKey(e => e.DeviceId);
+            modelBuilder.Entity<Device>().HasMany(d => d.Schedules).WithOne(s => s.Device).HasForeignKey(s => s.DeviceId);
+            modelBuilder.Entity<Device>().HasMany(d => d.DeviceLogs).WithOne(l => l.Device).HasForeignKey(l => l.DeviceId);
+            modelBuilder.Entity<User>().HasMany(u => u.UserSettings).WithOne(s => s.User).HasForeignKey(s => s.UserId);
+
             //isDelete global query filter
             //.IgnoreQueryFilters()
             modelBuilder.Entity<Users>()

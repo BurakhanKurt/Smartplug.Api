@@ -11,6 +11,8 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using Smartplug.Application.Jwt;
 using System.Reflection;
+using Smartplug.Api.Application.Jwt;
+using Smartplug.Application.Services;
 
 
 
@@ -28,6 +30,7 @@ else
     builder.Configuration.AddJsonFile($"appsettings.{environment}.json", optional: false, reloadOnChange: true);
 }
 
+builder.Configuration.AddJsonFile("jwtSettings.json");
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 
 builder.Services.AddDbContext<SmartplugDbContext>(options =>
@@ -78,11 +81,13 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddScoped<JwtGenerator>();
+builder.Services.AddTransient<IUserAccessor, UserAccessor>();
 builder.Services.AddSwaggerGen(setup =>
 {
-    string xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    string xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    setup.IncludeXmlComments(xmlPath);
+    //string xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    //string xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    //setup.IncludeXmlComments(xmlPath);
     // Include 'SecurityScheme' to use JWT Authentication
     var jwtSecurityScheme = new OpenApiSecurityScheme
     {
@@ -106,6 +111,8 @@ builder.Services.AddSwaggerGen(setup =>
     {
         { jwtSecurityScheme, Array.Empty<string>() }
     });
+
+
 });
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -131,7 +138,7 @@ builder.Services.AddMediatR(cfg =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || true)
 {
     app.UseSwagger();
     app.UseSwaggerUI();
