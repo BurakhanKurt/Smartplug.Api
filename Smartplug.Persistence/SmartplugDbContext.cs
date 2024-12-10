@@ -23,24 +23,21 @@ namespace Smartplug.Persistence
             modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("RoleClaims");
             modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("UserRoles");
             modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("UserTokens");
-
-
-            modelBuilder.Entity<Users>().HasMany(u => u.Device).WithOne(d => d.User).HasForeignKey(d => d.UserId);
-            modelBuilder.Entity<Device>().HasMany(d => d.EnergyUsageLogs).WithOne(e => e.Device).HasForeignKey(e => e.DeviceId);
-            modelBuilder.Entity<Device>().HasMany(d => d.Schedules).WithOne(s => s.Device).HasForeignKey(s => s.DeviceId);
-            modelBuilder.Entity<Device>().HasMany(d => d.DeviceLogs).WithOne(l => l.Device).HasForeignKey(l => l.DeviceId);
-            modelBuilder.Entity<User>().HasMany(u => u.UserSettings).WithOne(s => s.User).HasForeignKey(s => s.UserId);
-
+            
             //isDelete global query filter
             //.IgnoreQueryFilters()
             modelBuilder.Entity<Users>()
                 .HasQueryFilter(e => !e.IsDeleted);
             modelBuilder.Entity<Role>()
                 .HasQueryFilter(e => !e.IsDeleted);
-
         }
 
         public DbSet<Users> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Device> Devices { get; set; }
+        public DbSet<EnergyUsageLog> EnergyUsageLogs { get; set; }
+        public DbSet<Schedule> Schedules { get; set; }
+        public DbSet<UserSetting> UserSettings { get; set; }
 
         public override int SaveChanges()
         {
