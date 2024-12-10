@@ -1,0 +1,10 @@
+﻿{
+  "Jwt": {
+    "Key": "d3d5d97ead5356c2c260e4e4240da1c32dade481afc33ce05357480c88fb40a06884b178a3cefd7f0549d7415260ea4caabf81b897bde223653d7597ea431d61",
+    "Issuer": "Smartplug",
+    "Audience": "Smartplug",
+    "Subject": "Smartplug",
+    "Ttl": 600,
+    "RefreshTtl": 1800
+  }
+}
