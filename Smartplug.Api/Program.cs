@@ -131,6 +131,11 @@ builder.Services.AddSignalR();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<SmartplugDbContext>();
+    dbContext.Database.Migrate();
+}
 
 RoleSeed.SeedRoles(app.Services).Wait();
 DefaultSeedUsers.SeedDefaultUser(app.Services).Wait();
