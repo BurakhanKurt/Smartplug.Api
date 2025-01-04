@@ -17,18 +17,6 @@ namespace Smartplug.Api.Controllers
         /// </summary>
         /// <param name="command">Güç durumu ve cihaz IP adresi</param>
         /// <returns>Başarılı olup olmadığı</returns>
-        [HttpPost("set-relay-on")]
-        public async Task<IActionResult> SetPower([FromBody] SetRelayOnCommand command)
-        {
-            var response = await mediator.Send(command);
-            return CreateActionResultInstance(response);
-        }
-
-        /// <summary>
-        /// Prizi açma veya kapatma
-        /// </summary>
-        /// <param name="command">Güç durumu ve cihaz IP adresi</param>
-        /// <returns>Başarılı olup olmadığı</returns>
         [HttpPost("set-power")]
         public async Task<IActionResult> SetPower([FromBody] SetPowerCommand command)
         {

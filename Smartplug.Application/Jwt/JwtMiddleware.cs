@@ -20,7 +20,7 @@ namespace Smartplug.Application.Jwt
             _userManager=userManager;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context,IServiceProvider serviceProvider)
         {
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
             var validateTokenResult = await _jwtGenerator.ValidateToken(token);

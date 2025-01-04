@@ -1,8 +1,11 @@
-﻿using MediatR;
+﻿using System.Security.Cryptography.Xml;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Smartplug.Application.Dtos.Auth.Device;
 using Smartplug.Application.Handlers.Auth.Command;
+using Smartplug.Application.Handlers.Auth.Command.Device;
 using Smartplug.Core.ControllerBases;
 
 namespace Smartplug.Api.Controllers
@@ -39,6 +42,17 @@ namespace Smartplug.Api.Controllers
         public async Task<IActionResult> RefreshToken([FromQuery] RefreshTokenCommand command)
         {
             var response = await mediator.Send(command);
+            return CreateActionResultInstance(response);
+        }
+        
+        [HttpPost("/callback/signature_device")]
+        [Authorize]
+        public async Task<IActionResult> SignatureDevice([FromBody] SignatureDeviceRequest request)
+        {
+            var response = await mediator.Send(new SignatureDeviceCommand
+            {
+                Data = request
+            });
             return CreateActionResultInstance(response);
         }
     }

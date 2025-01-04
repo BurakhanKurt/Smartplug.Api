@@ -1,23 +1,20 @@
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Smartplug.Api.Application.Jwt;
+using Smartplug.Application.Jwt;
+using Smartplug.Application.Scoket;
+using Smartplug.Application.Services;
 using Smartplug.Application.Settings;
 using Smartplug.Domain.Entities;
 using Smartplug.Persistence;
-using System.Text;
-
-using Microsoft.OpenApi.Models;
-using Smartplug.Application.Jwt;
-using System.Reflection;
-using Smartplug.Api.Application.Jwt;
-using Smartplug.Application.Services;
-using Microsoft.Extensions.Options;
 using Smartplug.Persistence.Seeds;
-using Smartplug.Application.Services.PlugService;
-
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,23 +35,24 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"))
 
 builder.Services.AddDbContext<SmartplugDbContext>(options =>
 {
-    options.UseNpgsql(Environment.GetEnvironmentVariable("ConnectionString") ?? builder.Configuration.GetConnectionString("localDb"));
+    options.UseNpgsql(Environment.GetEnvironmentVariable("ConnectionString") ??
+                      builder.Configuration.GetConnectionString("localDb"));
 });
 
 builder.Services.AddIdentity<Users, Role>(options =>
-{
-    options.Tokens.PasswordResetTokenProvider = "passwordReset";
-    options.SignIn.RequireConfirmedAccount = false;
-    options.Password.RequireLowercase = true;
-    options.Password.RequireUppercase = true;
-    options.Password.RequiredUniqueChars = 1;
-    options.Password.RequiredLength = 8;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireDigit = true;
-    options.User.RequireUniqueEmail = false;
-    options.Tokens.PasswordResetTokenProvider = TokenOptions.DefaultEmailProvider;
-    options.Tokens.EmailConfirmationTokenProvider = "TokenProvider";
-})
+    {
+        options.Tokens.PasswordResetTokenProvider = "passwordReset";
+        options.SignIn.RequireConfirmedAccount = false;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireUppercase = true;
+        options.Password.RequiredUniqueChars = 1;
+        options.Password.RequiredLength = 8;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireDigit = true;
+        options.User.RequireUniqueEmail = false;
+        options.Tokens.PasswordResetTokenProvider = TokenOptions.DefaultEmailProvider;
+        options.Tokens.EmailConfirmationTokenProvider = "TokenProvider";
+    })
     .AddEntityFrameworkStores<SmartplugDbContext>()
     //.AddErrorDescriber<MultilanguageIdentityErrorDescriber>()
     .AddDefaultTokenProviders()
@@ -114,32 +112,22 @@ builder.Services.AddSwaggerGen(setup =>
     {
         { jwtSecurityScheme, Array.Empty<string>() }
     });
-
-
 });
-
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+const string myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(MyAllowSpecificOrigins, builder =>
+    options.AddPolicy(myAllowSpecificOrigins, builder =>
         builder
-        .AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader());
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
 });
-
-// Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddMediatR(cfg =>
-{
-    cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
-});
-builder.Services.AddSingleton<PlugService>();
-
+builder.Services.AddMediatR(cfg => { cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()); });
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -153,25 +141,40 @@ if (app.Environment.IsDevelopment() || true)
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<JwtMiddleware>();
+//app.UseMiddleware<JwtMiddleware>();
 // WebSocket Middleware
-app.UseWebSockets();
-app.Use(async (context, next) =>
-{
-    if (context.Request.Headers["Upgrade"] == "websocket")
-    {
-        var socket = await context.WebSockets.AcceptWebSocketAsync();
-        var plugService = context.RequestServices.GetRequiredService<IPlugService>();
-        await plugService.HandleAsync(context); // WebSocket baðlantýsýný yönlendir
-    }
-    else
-    {
-        await next.Invoke();
-    }
-});
+// app.UseWebSockets();
+// app.Use(async (context, next) =>
+// {
+//     if (context.Request.Headers["Upgrade"] == "websocket")
+//     {
+//         var socket = await context.WebSockets.AcceptWebSocketAsync();
+//         var plugService = context.RequestServices.GetRequiredService<IPlugService>();
+//         await plugService.HandleAsync(context); // WebSocket baï¿½lantï¿½sï¿½nï¿½ yï¿½nlendir
+//     }
+//     else
+//     {
+//         await next.Invoke();
+//     }
+// });
 app.MapControllers();
+app.UseRouting();
 
+app.MapHub<PlugHub>("/plugHub");
+
+app.MapGet("TEST/plug-on", ([FromServices]IHubContext<PlugHub> hubContext) =>
+{
+    hubContext.Clients.All.SendAsync("PlugStatus", "on");
+    return Results.Ok("Plug is on");
+});
+
+app.MapGet("TEST/plug-off", ([FromServices]IHubContext<PlugHub> hubContext) =>
+{
+    hubContext.Clients.All.SendAsync("PlugStatus", "off");
+    return Results.Ok("Plug is off");
+});
 
 app.Run();
