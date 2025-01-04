@@ -15,6 +15,7 @@ using Smartplug.Api.Application.Jwt;
 using Smartplug.Application.Services;
 using Microsoft.Extensions.Options;
 using Smartplug.Persistence.Seeds;
+using Smartplug.Application.Services.PlugService;
 
 
 
@@ -137,6 +138,9 @@ builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
 });
+builder.Services.AddSingleton<PlugService>();
+
+
 var app = builder.Build();
 
 
@@ -152,6 +156,21 @@ if (app.Environment.IsDevelopment() || true)
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<JwtMiddleware>();
+// WebSocket Middleware
+app.UseWebSockets();
+app.Use(async (context, next) =>
+{
+    if (context.Request.Headers["Upgrade"] == "websocket")
+    {
+        var socket = await context.WebSockets.AcceptWebSocketAsync();
+        var plugService = context.RequestServices.GetRequiredService<IPlugService>();
+        await plugService.HandleAsync(context); // WebSocket baðlantýsýný yönlendir
+    }
+    else
+    {
+        await next.Invoke();
+    }
+});
 app.MapControllers();
 
 

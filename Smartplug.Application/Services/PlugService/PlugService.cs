@@ -1,46 +1,83 @@
-﻿using System.Text;
-using System.Text.Json;
+﻿using Microsoft.AspNetCore.Http;
+using System.Net.WebSockets;
+using System.Text;
+using System.Threading;
 
 namespace Smartplug.Application.Services.PlugService
 {
     public class PlugService : IPlugService
     {
-        private readonly HttpClient _httpClient;
+        private readonly RequestDelegate _next;
+        private static WebSocket _webSocket;
 
-        public PlugService(HttpClient httpClient)
+        public PlugService(RequestDelegate next)
         {
-            _httpClient = httpClient;
+            _next = next;
         }
 
-        public async Task<bool> SetRelayOnAsync(string deviceIp, bool powerState)
+        // WebSocket dinleme işlemi
+        public async Task HandleAsync(HttpContext context)
         {
-            var url = $"http://{deviceIp}/relay/on";
-            var content = new StringContent(JsonSerializer.Serialize(new { power = powerState }), Encoding.UTF8, "application/json");
+            if (context.Request.Headers["Upgrade"] == "websocket")
+            {
+                var socket = await context.WebSockets.AcceptWebSocketAsync();
+                _webSocket = socket;
 
-            try
-            {
-                var response = await _httpClient.PostAsync(url, content);
-                return response.IsSuccessStatusCode;
+                await ListenForMessagesAsync();
             }
-            catch
+            else
             {
-                return false;
+                context.Response.StatusCode = 400;
             }
         }
 
-        public async Task<bool> SetRelayOffAsync(string deviceIp, bool powerState)
+        // WebSocket üzerinden gelen mesajları dinle
+        private async Task ListenForMessagesAsync()
         {
-            var url = $"http://{deviceIp}/relay/off";
-            var content = new StringContent(JsonSerializer.Serialize(new { power = powerState }), Encoding.UTF8, "application/json");
+            var buffer = new byte[1024];
+            while (_webSocket.State == WebSocketState.Open)
+            {
+                var result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                if (result.MessageType == WebSocketMessageType.Text)
+                {
+                    var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                    Console.WriteLine($"Received: {message}");
 
-            try
-            {
-                var response = await _httpClient.PostAsync(url, content);
-                return response.IsSuccessStatusCode;
+                    if (message == "set_relay_on")
+                    {
+                        // Röleyi aç
+                        Console.WriteLine("Turning relay ON");
+                        await SendMessageAsync("Relay is now ON");
+                    }
+                    else if (message == "check_relay_status")
+                    {
+                        // Röle durumu
+                        string relayStatus = "ON"; // Örneğin, röleyi açtığınızda
+                        await SendMessageAsync($"Relay status: {relayStatus}");
+                    }
+                }
             }
-            catch
+        }
+
+        // WebSocket'e mesaj gönder
+        public async Task SendMessageAsync(string message)
+        {
+            var buffer = Encoding.UTF8.GetBytes(message);
+            var segment = new ArraySegment<byte>(buffer);
+
+            if (_webSocket.State == WebSocketState.Open)
             {
-                return false;
+                await _webSocket.SendAsync(segment, WebSocketMessageType.Text, true, CancellationToken.None);
+            }
+        }
+
+
+        // WebSocket bağlantısını kapat
+        public async Task CloseConnectionAsync()
+        {
+            if (_webSocket?.State == WebSocketState.Open)
+            {
+                await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing connection", CancellationToken.None);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Smartplug.Application.Handlers.Plug.Command;
@@ -9,8 +10,20 @@ namespace Smartplug.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class PlugController : CustomControllerBase
+    public class PlugController(IMediator mediator) : CustomControllerBase
     {
+        /// <summary>
+        /// Prizi açma veya kapatma
+        /// </summary>
+        /// <param name="command">Güç durumu ve cihaz IP adresi</param>
+        /// <returns>Başarılı olup olmadığı</returns>
+        [HttpPost("set-relay-on")]
+        public async Task<IActionResult> SetPower([FromBody] SetRelayOnCommand command)
+        {
+            var response = await mediator.Send(command);
+            return CreateActionResultInstance(response);
+        }
+
         /// <summary>
         /// Prizi açma veya kapatma
         /// </summary>
