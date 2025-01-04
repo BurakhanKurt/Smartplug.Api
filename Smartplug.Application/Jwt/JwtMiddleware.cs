@@ -25,12 +25,12 @@ namespace Smartplug.Application.Jwt
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
             var validateTokenResult = await _jwtGenerator.ValidateToken(token);
 
-            if (validateTokenResult.IsValid)
-            {
-                // Kullanıcıyı elde et
-                var user = context.Items["User"] != null ? (Users)context.Items["User"] : await _userManager.FindByIdAsync(validateTokenResult.UserId);
-                context.Items["User"] = user;             
-            }
+            //if (validateTokenResult.IsValid)
+            //{
+            //    // Kullanıcıyı elde et
+            //    var user = context.Items["User"] != null ? (Users)context.Items["User"] : await _userManager.FindByIdAsync(validateTokenResult.UserId);
+            //    context.Items["User"] = user;             
+            //}
 
             if (!validateTokenResult.IsValid && token != null)
             {

@@ -130,7 +130,7 @@ builder.Services.AddMediatR(cfg => { cfg.RegisterServicesFromAssemblies(AppDomai
 builder.Services.AddSignalR();
 
 var app = builder.Build();
-
+app.UseMiddleware<JwtMiddleware>();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<SmartplugDbContext>();
@@ -147,26 +147,30 @@ if (app.Environment.IsDevelopment() || true)
     app.UseSwaggerUI();
 }
 
-app.UseAuthentication();
-app.UseAuthorization();
-//app.UseMiddleware<JwtMiddleware>();
-// WebSocket Middleware
-// app.UseWebSockets();
-// app.Use(async (context, next) =>
-// {
-//     if (context.Request.Headers["Upgrade"] == "websocket")
-//     {
-//         var socket = await context.WebSockets.AcceptWebSocketAsync();
-//         var plugService = context.RequestServices.GetRequiredService<IPlugService>();
-//         await plugService.HandleAsync(context); // WebSocket ba�lant�s�n� y�nlendir
-//     }
-//     else
-//     {
-//         await next.Invoke();
-//     }
-// });
-app.MapControllers();
 app.UseRouting();
+
+app.UseAuthentication(); // Doğru sırada
+app.UseAuthorization();  // Doğru sırada
+
+app.MapControllers();    // Bu middleware'lerden sonra
+
+
+//WebSocket Middleware
+// app.UseWebSockets();
+//app.Use(async (context, next) =>
+//{
+//    if (context.Request.Headers["Upgrade"] == "websocket")
+//    {
+//        var socket = await context.WebSockets.AcceptWebSocketAsync();
+//        var plugService = context.RequestServices.GetRequiredService<IPlugService>();
+//        await plugService.HandleAsync(context); // WebSocket ba�lant�s�n� y�nlendir
+//    }
+//    else
+//    {
+//        await next.Invoke();
+//    }
+//});
+
 
 app.MapHub<PlugHub>("/plugHub");
 

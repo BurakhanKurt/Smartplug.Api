@@ -32,6 +32,7 @@ namespace Smartplug.Api.Controllers
         /// <returns>
         /// </returns>
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginCommand command)
         {
             var response = await mediator.Send(command);

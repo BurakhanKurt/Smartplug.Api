@@ -40,23 +40,22 @@ namespace Smartplug.Api.Application.Jwt
             }
 
 
-            string userid = string.Empty;
+            //string userid = string.Empty;
 
-            if (userid.IsNullOrEmpty())
-            {
-                return new ValidateTokenResult(false, "Token not found!");
-            }
+            //if (userid.IsNullOrEmpty())
+            //{
+            //    return new ValidateTokenResult(false, "Token not found!");
+            //}
 
-            var userGuid = Guid.Parse(userid);
-            var existUser = await _userManager.Users.AnyAsync(x => x.Id == userGuid);
+            //var userGuid = Guid.Parse(userid);
+            //var existUser = await _userManager.Users.AnyAsync(x => x.Id == userGuid);
 
-            if (!existUser)
-            {
-                //_logger.SendError($"Validate line 130 | user null | TokenType => {tokenType}", nameof(ValidateToken));
-                return new ValidateTokenResult(false, "Token not found!");
-            }
+            //if (!existUser)
+            //{
+            //    //_logger.SendError($"Validate line 130 | user null | TokenType => {tokenType}", nameof(ValidateToken));
+            //    return new ValidateTokenResult(false, "Token not found!");
+            //}
 
-            //token = token.Split(' ')[1];
             var tokenHandler = new JwtSecurityTokenHandler();
 
             var key = Encoding.ASCII.GetBytes(_jwtSettings.Key);
@@ -146,7 +145,7 @@ namespace Smartplug.Api.Application.Jwt
                 claims.AddRange(new List<Claim>()
                 {
                     new Claim(JwtRegisteredClaimNames.Email,user.Email),
-                    new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+                    //new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
                     new Claim("role", rolesTxt)
                 });
 
