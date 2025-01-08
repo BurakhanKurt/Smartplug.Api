@@ -87,7 +87,7 @@ namespace Smartplug.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    SerialNumber = table.Column<string>(type: "text", nullable: false),
+                    SerialNumber = table.Column<string>(type: "text", nullable: true),
                     LocalIP = table.Column<string>(type: "text", nullable: false),
                     Mac = table.Column<string>(type: "text", nullable: false),
                     IsOnline = table.Column<bool>(type: "boolean", nullable: false),

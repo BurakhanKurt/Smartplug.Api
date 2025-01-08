@@ -21,7 +21,7 @@ namespace Smartplug.Api.Controllers
         }
 
         [HttpPost("assign-user-devices")]
-        public async Task<IActionResult> AssignUserDevices(AssignUserDevicesCommand command)
+        public async Task<IActionResult> AssignUserDevices([FromBody]AssignUserDevicesCommand command)
         {
             var response = await mediator.Send(command);
             return CreateActionResultInstance(response);

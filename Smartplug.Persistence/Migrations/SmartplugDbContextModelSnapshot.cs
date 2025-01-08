@@ -150,7 +150,6 @@ namespace Smartplug.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("SerialNumber")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<Guid>("UserId")

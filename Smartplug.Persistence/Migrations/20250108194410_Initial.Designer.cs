@@ -12,7 +12,7 @@ using Smartplug.Persistence;
 namespace Smartplug.Persistence.Migrations
 {
     [DbContext(typeof(SmartplugDbContext))]
-    [Migration("20250108171642_Initial")]
+    [Migration("20250108194410_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -153,7 +153,6 @@ namespace Smartplug.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("SerialNumber")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<Guid>("UserId")
