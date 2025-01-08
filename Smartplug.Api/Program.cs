@@ -128,7 +128,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(cfg => { cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()); });
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(options =>
+{
+    options.KeepAliveInterval = TimeSpan.FromSeconds(5); 
+    options.ClientTimeoutInterval = TimeSpan.FromSeconds(10); 
+});
+
 
 var app = builder.Build();
 app.UseMiddleware<JwtMiddleware>();
