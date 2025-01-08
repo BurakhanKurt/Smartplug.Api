@@ -28,7 +28,7 @@ namespace Smartplug.Api.Controllers
         }
 
         [Authorize]
-        [HttpGet("plug-status/{id}")]
+        [HttpGet("plug-status/{deviceId}")]
         public async Task<IActionResult> PlugChangeStatus(
             [FromRoute]Guid deviceId,
             [FromQuery]bool status)
