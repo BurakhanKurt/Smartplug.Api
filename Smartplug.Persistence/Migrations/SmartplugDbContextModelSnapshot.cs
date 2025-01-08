@@ -134,6 +134,17 @@ namespace Smartplug.Persistence.Migrations
                     b.Property<bool>("IsOnline")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("IsWorking")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LocalIP")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Mac")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");

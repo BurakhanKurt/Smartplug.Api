@@ -12,7 +12,7 @@ using Smartplug.Persistence;
 namespace Smartplug.Persistence.Migrations
 {
     [DbContext(typeof(SmartplugDbContext))]
-    [Migration("20241210094500_Initial")]
+    [Migration("20250108171642_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -136,6 +136,17 @@ namespace Smartplug.Persistence.Migrations
 
                     b.Property<bool>("IsOnline")
                         .HasColumnType("boolean");
+
+                    b.Property<bool>("IsWorking")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LocalIP")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Mac")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
