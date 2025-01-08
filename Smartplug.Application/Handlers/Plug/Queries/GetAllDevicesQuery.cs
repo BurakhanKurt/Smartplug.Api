@@ -23,6 +23,7 @@ public class GetAllDevicesQueryHandler(SmartplugDbContext dbContext,IUserAccesso
                 Name = x.Name,
                 SerialNumber = x.SerialNumber,
                 IsOnline = x.IsOnline,
+                isWorking = x.IsWorking,
                 LocalIP = x.LocalIP,
                 Mac= x.Mac,
             })

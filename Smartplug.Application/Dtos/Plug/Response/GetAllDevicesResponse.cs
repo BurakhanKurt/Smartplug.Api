@@ -7,5 +7,6 @@ public class GetAllDevicesResponse
     public string SerialNumber { get; set; }
     public string LocalIP { get; set; }
     public string Mac { get; set; }
+    public bool isWorking { get; set; }
     public bool IsOnline { get; set; } = false;
 }
