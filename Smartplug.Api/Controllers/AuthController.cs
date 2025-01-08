@@ -31,7 +31,7 @@ namespace Smartplug.Api.Controllers
         /// </remarks>
         /// <returns>
         /// </returns>
-        [HttpPost]
+        [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginCommand command)
         {

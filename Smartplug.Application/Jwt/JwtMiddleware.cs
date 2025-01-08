@@ -18,6 +18,12 @@ namespace Smartplug.Application.Jwt
 
         public async Task Invoke(HttpContext context,JwtGenerator jwtGenerator, UserManager<Users> userManager)
         {
+            if (context.Request.Path.Equals("/login", StringComparison.OrdinalIgnoreCase))
+            {
+                await _next(context);
+                return;
+            }
+            
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
             var validateTokenResult = await jwtGenerator.ValidateToken(token);
 
