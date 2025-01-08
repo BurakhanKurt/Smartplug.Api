@@ -14,7 +14,7 @@ public class GetAllDevicesQueryHandler(SmartplugDbContext dbContext,IUserAccesso
 {
     public async Task<Response<List<GetAllDevicesResponse>>> Handle(GetAllDevicesQuery request, CancellationToken cancellationToken)
     {
-        var userId = userAccessor.User.Claims.FirstOrDefault(x => x.Type.Equals("userId"))?.Value;
+        var userId = userAccessor.User.Claims.FirstOrDefault(x => x.Type.Equals("userid"))?.Value;
         var devices = await dbContext.Devices
             .Where(x => x.UserId == Guid.Parse(userId??string.Empty))
             .Select(x => new GetAllDevicesResponse
