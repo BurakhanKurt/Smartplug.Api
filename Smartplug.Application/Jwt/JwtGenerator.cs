@@ -155,7 +155,7 @@ namespace Smartplug.Api.Application.Jwt
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
                 var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-                var expires = DateTime.UtcNow.AddSeconds(_jwtSettings.Ttl);
+                var expires = DateTime.UtcNow.AddHours(_jwtSettings.Ttl);
 
                 var rawToken = new JwtSecurityToken(
                     _jwtSettings.Issuer,
