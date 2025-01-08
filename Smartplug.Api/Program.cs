@@ -118,10 +118,11 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(myAllowSpecificOrigins, builder =>
         builder
-            .AllowAnyOrigin()
+            .WithOrigins("http://localhost:3000")
             .AllowAnyMethod()
             .AllowAnyHeader());
 });
+
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -146,7 +147,7 @@ if (app.Environment.IsDevelopment() || true)
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors(myAllowSpecificOrigins);
 app.UseRouting();
 
 app.UseAuthentication(); // Doğru sırada
@@ -154,36 +155,6 @@ app.UseAuthorization();  // Doğru sırada
 
 app.MapControllers();    // Bu middleware'lerden sonra
 
-
-//WebSocket Middleware
-// app.UseWebSockets();
-//app.Use(async (context, next) =>
-//{
-//    if (context.Request.Headers["Upgrade"] == "websocket")
-//    {
-//        var socket = await context.WebSockets.AcceptWebSocketAsync();
-//        var plugService = context.RequestServices.GetRequiredService<IPlugService>();
-//        await plugService.HandleAsync(context); // WebSocket ba�lant�s�n� y�nlendir
-//    }
-//    else
-//    {
-//        await next.Invoke();
-//    }
-//});
-
-
 app.MapHub<PlugHub>("/plugHub");
-
-app.MapGet("TEST/plug-on", ([FromServices]IHubContext<PlugHub> hubContext) =>
-{
-    hubContext.Clients.All.SendAsync("PlugStatus", "on");
-    return Results.Ok("Plug is on");
-});
-
-app.MapGet("TEST/plug-off", ([FromServices]IHubContext<PlugHub> hubContext) =>
-{
-    hubContext.Clients.All.SendAsync("PlugStatus", "off");
-    return Results.Ok("Plug is off");
-});
 
 app.Run();

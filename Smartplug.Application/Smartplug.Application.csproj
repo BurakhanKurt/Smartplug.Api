@@ -17,4 +17,8 @@
     <ProjectReference Include="..\Smartplug.Persistence\Smartplug.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Dtos\Plug\Request\" />
+  </ItemGroup>
+
 </Project>

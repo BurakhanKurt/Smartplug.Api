@@ -9,21 +9,17 @@ namespace Smartplug.Application.Jwt
     public class JwtMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly JwtGenerator _jwtGenerator;
-        private readonly UserManager<Users> _userManager;
 
 
-        public JwtMiddleware(RequestDelegate next, JwtGenerator jwtGenerator, UserManager<Users> userManager)
+        public JwtMiddleware(RequestDelegate next)
         {
             _next = next;
-            _jwtGenerator=jwtGenerator;
-            _userManager=userManager;
         }
 
-        public async Task Invoke(HttpContext context,IServiceProvider serviceProvider)
+        public async Task Invoke(HttpContext context,JwtGenerator jwtGenerator, UserManager<Users> userManager)
         {
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-            var validateTokenResult = await _jwtGenerator.ValidateToken(token);
+            var validateTokenResult = await jwtGenerator.ValidateToken(token);
 
             //if (validateTokenResult.IsValid)
             //{

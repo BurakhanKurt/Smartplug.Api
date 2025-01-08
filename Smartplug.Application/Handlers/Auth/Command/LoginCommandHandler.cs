@@ -32,8 +32,8 @@ namespace Smartplug.Application.Handlers.Auth.Command
         {
 
             var user = await signInManager.UserManager.Users
-                .Where(u => u.UserName == request.Username && !u.IsDeleted)
-                .FirstOrDefaultAsync();
+                .Where(u => u.UserName == request.Username || u.Email == request.Username && !u.IsDeleted)
+                .FirstOrDefaultAsync(cancellationToken);
 
             if (user == null || user.IsDeleted)
             {
