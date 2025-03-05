@@ -31,7 +31,7 @@ namespace Smartplug.Application.Scoket
 
         public override async Task OnConnectedAsync()
         {
-            await Clients.All.SendAsync("DeviceStatus", "Cihaz baglandi su id ile:" , Context.ConnectionId);
+            await Clients.All.SendAsync("DeviceStatus", "Cihaz baglandi su id ile:", Context.ConnectionId);
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)
@@ -41,9 +41,10 @@ namespace Smartplug.Application.Scoket
 
             await dbContext.Devices.Where(x => x.Id == key)
                 .ExecuteUpdateAsync(s =>
-                    s.SetProperty(p => p.IsOnline, false));
-            
-            await Clients.All.SendAsync("DeviceStatus", "Cihaz baglantisi kesildi su id ile:" , Context.ConnectionId);
+                    s.SetProperty(p => p.IsOnline, false)
+                        .SetProperty(p => p.IsWorking, false));
+
+            await Clients.All.SendAsync("DeviceStatus", "Cihaz baglantisi kesildi su id ile:", Context.ConnectionId);
         }
     }
 }

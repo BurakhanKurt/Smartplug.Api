@@ -24,9 +24,23 @@ public class AssignUserDevicesCommandHandler(SmartplugDbContext dbContext)
         
         if(!userExists)
             return Response<string>.Fail("", 404);
+        
+        var device = await dbContext.Devices
+            .FirstOrDefaultAsync(x => x.Mac == request.DevicesMac 
+                                      && x.UserId == Guid.Parse(request.UserId), cancellationToken);
 
-
-        var device = new Device
+        if (device != null)
+        {
+            device.LocalIP = request.LocalIP;
+            device.IsOnline = true;
+            device.IsWorking = false;
+            dbContext.Devices.Update(device);
+            await dbContext.SaveChangesAsync(cancellationToken);
+            
+            return Response<string>.Success(device.Id.ToString(), 200);
+        }
+        
+        device = new Device
         {
             Mac = request.DevicesMac,
             LocalIP = request.LocalIP,
