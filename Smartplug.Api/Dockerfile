@@ -8,11 +8,11 @@ EXPOSE 8080
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["../Smartplug.Api/Smartplug.Api.csproj", "Smartplug.Api/"]
-COPY ["../Smartplug.Application/Smartplug.Application.csproj", "Smartplug.Application/"]
-COPY ["../Smartplug.Persistence/Smartplug.Persistence.csproj", "Smartplug.Persistence/"]
-COPY ["../Smartplug.Domain/Smartplug.Domain.csproj", "Smartplug.Domain/"]
-COPY ["../Smartplug.Core/Smartplug.Core.csproj", "Smartplug.Core/"]
+COPY ["Smartplug.Api/Smartplug.Api.csproj", "Smartplug.Api/"]
+COPY ["Smartplug.Application/Smartplug.Application.csproj", "Smartplug.Application/"]
+COPY ["Smartplug.Persistence/Smartplug.Persistence.csproj", "Smartplug.Persistence/"]
+COPY ["Smartplug.Domain/Smartplug.Domain.csproj", "Smartplug.Domain/"]
+#COPY ["Smartplug.Core/Smartplug.Core.csproj", "Smartplug.Core/"]
 RUN dotnet restore "./Smartplug.Api/Smartplug.Api.csproj"
 COPY . .
 WORKDIR "/src/Smartplug.Api"
