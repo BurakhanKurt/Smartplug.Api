@@ -2,7 +2,7 @@
 services:
   smartplug-service:
     container_name: smartplug-service
-    hostname: "smartplug"
+    hostname: smartplug
     ports:
       - "5000:8080"
     build:
@@ -17,7 +17,7 @@ services:
   postgres-db:
     image: postgres:latest
     container_name: postgres-db
-    hostname: "postgres-db"
+    hostname: postgres-db
     ports:
       - "5432:5432"
     environment:
