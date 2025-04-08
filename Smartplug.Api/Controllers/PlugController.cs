@@ -21,7 +21,7 @@ namespace Smartplug.Api.Controllers
         }
 
         [HttpPost("assign-user-devices")]
-        public async Task<IActionResult> AssignUserDevices([FromBody]AssignUserDevicesCommand command)
+        public async Task<IActionResult> AssignUserDevices([FromBody] AssignUserDevicesCommand command)
         {
             var response = await mediator.Send(command);
             return CreateActionResultInstance(response);
@@ -30,8 +30,8 @@ namespace Smartplug.Api.Controllers
         [Authorize]
         [HttpGet("plug-status/{deviceId}")]
         public async Task<IActionResult> PlugChangeStatus(
-            [FromRoute]Guid deviceId,
-            [FromQuery]bool status)
+            [FromRoute] Guid deviceId,
+            [FromQuery] bool status)
         {
             var response = await mediator.Send(new PlugChangeStatusCommand()
             {
@@ -39,6 +39,13 @@ namespace Smartplug.Api.Controllers
                 Status = status
             });
             return CreateActionResultInstance(response);
+        }
+
+        [Authorize]
+        [HttpGet("healty-check")]
+        public async Task<IActionResult> PlugChangeStatus()
+        {
+            return Ok();
         }
     }
 }
