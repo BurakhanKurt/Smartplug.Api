@@ -33,7 +33,7 @@ namespace Smartplug.Persistence.Seeds
                     }
 
                 }
-            }
+            }//
             foreach (var role in roles)
             {
                 if (await roleManager.RoleExistsAsync(role.Key.ToString()))
