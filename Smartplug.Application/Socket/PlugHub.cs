@@ -33,7 +33,11 @@ namespace Smartplug.Application.Scoket
         {
             await Clients.All.SendAsync("DeviceStatus", "Cihaz baglandi su id ile:", Context.ConnectionId);
         }
-        //
+        /// <summary>
+        /// /
+        /// </summary>
+        /// <param name="exception"></param>
+        /// <returns></returns>
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
             var key = ConnectedClients.FirstOrDefault(x => x.Value == Context.ConnectionId).Key;
