@@ -9,7 +9,5 @@
         public DateTime EndTime { get; set; }
         public bool IsEnabled { get; set; } = true;
         public string Name { get; set; }
-        ///
-
     }
 }
