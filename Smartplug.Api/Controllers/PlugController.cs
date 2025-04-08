@@ -42,7 +42,7 @@ namespace Smartplug.Api.Controllers
         }
 
         [Authorize]
-        [HttpGet("healty-check")]
+        [HttpGet("healty-checkOne")]
         public async Task<IActionResult> PlugChangeStatus()
         {
             return Ok();
