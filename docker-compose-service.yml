@@ -1,4 +1,18 @@
 services:
+  smartplug-service:
+    container_name: smartplug-service
+    hostname: smartplug
+    ports:
+      - "5000:8080"
+    build:
+      context: .
+      dockerfile: ./Smartplug.Api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+    networks:
+      - app-network
+    restart: always
+services:
   hangfire-db:
     image: postgres:latest
     container_name: hangfire-db
