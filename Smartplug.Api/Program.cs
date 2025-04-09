@@ -15,6 +15,9 @@ using Smartplug.Application.Settings;
 using Smartplug.Domain.Entities;
 using Smartplug.Persistence;
 using Smartplug.Persistence.Seeds;
+using Hangfire;
+using Hangfire.PostgreSql;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -134,8 +137,21 @@ builder.Services.AddSignalR(options =>
     options.KeepAliveInterval = TimeSpan.FromSeconds(10);
 });
 
+// Hangfire için PostgreSQL bağlantı dizesini kullanarak Hangfire'ı yapılandırıyoruz.
+// Eğer ayrı bir connection string tanımladıysanız "HangfireConnection" ismini kullanın,
+// aksi halde mevcut connection string (örneğin "localDb") üzerinden de çalışacaktır.
+builder.Services.AddHangfire(config =>
+    config.UsePostgreSqlStorage(
+        builder.Configuration.GetConnectionString("HangfireConnection") ??
+        builder.Configuration.GetConnectionString("localDb")
+    )
+);
+builder.Services.AddHangfireServer();
 
+builder.Services.AddScoped<ISchedulingService, SchedulingService>();
 var app = builder.Build();
+
+
 app.UseMiddleware<JwtMiddleware>();
 using (var scope = app.Services.CreateScope())
 {
@@ -152,8 +168,12 @@ if (app.Environment.IsDevelopment() || true)
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors(myAllowSpecificOrigins);
+
+
 app.UseRouting();
+app.UseCors(myAllowSpecificOrigins);
+// Hangfire Dashboard'u ekleyerek job'larınızı yönetmek için arayüz sağlar.
+app.UseHangfireDashboard();
 
 app.UseAuthentication(); // Doğru sırada
 app.UseAuthorization();  // Doğru sırada

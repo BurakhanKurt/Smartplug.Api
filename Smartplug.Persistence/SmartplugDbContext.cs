@@ -13,24 +13,25 @@ namespace Smartplug.Persistence
         public SmartplugDbContext(DbContextOptions<SmartplugDbContext> options)
             : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
+{
+    base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Users>().ToTable("Users");
-            modelBuilder.Entity<Role>().ToTable("Roles");
-            modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("UserClaims");
-            modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("UserLogins");
-            modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("RoleClaims");
-            modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("UserRoles");
-            modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("UserTokens");
-            
-            //isDelete global query filter
-            //.IgnoreQueryFilters()
-            modelBuilder.Entity<Users>()
-                .HasQueryFilter(e => !e.IsDeleted);
-            modelBuilder.Entity<Role>()
-                .HasQueryFilter(e => !e.IsDeleted);
-        }
+    modelBuilder.Entity<Users>().ToTable("Users");
+    modelBuilder.Entity<Role>().ToTable("Roles");
+    modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("UserClaims");
+    modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("UserLogins");
+    modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("RoleClaims");
+    modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("UserRoles");
+    modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("UserTokens");
+
+    // Global query filter'lar
+    modelBuilder.Entity<Users>()
+        .HasQueryFilter(e => !e.IsDeleted);
+    modelBuilder.Entity<Role>()
+        .HasQueryFilter(e => !e.IsDeleted);
+
+
+    }
 
         public DbSet<Users> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
