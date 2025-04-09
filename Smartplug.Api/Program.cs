@@ -38,8 +38,7 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"))
 
 builder.Services.AddDbContext<SmartplugDbContext>(options =>
 {
-    options.UseNpgsql(Environment.GetEnvironmentVariable("ConnectionString") ??
-                      builder.Configuration.GetConnectionString("localDb"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("localDb"));
 });
 
 builder.Services.AddIdentity<Users, Role>(options =>
