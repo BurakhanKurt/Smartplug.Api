@@ -12,20 +12,5 @@ services:
     networks:
       - app-network
     restart: always
-
-  hangfire-db:
-    image: postgres:latest
-    container_name: hangfire-db
-    hostname: hangfire-db
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: P@ssw0rd
-      POSTGRES_DB: HangfireDB
-    networks:
-      - app-network
-    restart: always
-
 networks:
   app-network:
