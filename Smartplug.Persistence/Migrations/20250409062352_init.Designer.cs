@@ -12,8 +12,8 @@ using Smartplug.Persistence;
 namespace Smartplug.Persistence.Migrations
 {
     [DbContext(typeof(SmartplugDbContext))]
-    [Migration("20250108194410_Initial")]
-    partial class Initial
+    [Migration("20250409062352_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -229,17 +229,41 @@ namespace Smartplug.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<bool?>("DesiredStatus")
+                        .HasColumnType("boolean");
+
                     b.Property<Guid>("DeviceId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<TimeSpan?>("EndTimeOfDay")
+                        .HasColumnType("interval");
+
+                    b.Property<bool?>("Executed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("HangfireJobId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("HangfireJobIdOff")
+                        .HasColumnType("text");
+
+                    b.Property<string>("HangfireJobIdOn")
+                        .HasColumnType("text");
 
                     b.Property<bool>("IsEnabled")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime>("StartTime")
+                    b.Property<int?>("RecurringDay")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("ScheduledTime")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<TimeSpan?>("StartTimeOfDay")
+                        .HasColumnType("interval");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Smartplug.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -238,8 +238,16 @@ namespace Smartplug.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     DeviceId = table.Column<Guid>(type: "uuid", nullable: false),
-                    StartTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    EndTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Type = table.Column<int>(type: "integer", nullable: false),
+                    ScheduledTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    DesiredStatus = table.Column<bool>(type: "boolean", nullable: true),
+                    Executed = table.Column<bool>(type: "boolean", nullable: true),
+                    RecurringDay = table.Column<int>(type: "integer", nullable: true),
+                    StartTimeOfDay = table.Column<TimeSpan>(type: "interval", nullable: true),
+                    EndTimeOfDay = table.Column<TimeSpan>(type: "interval", nullable: true),
+                    HangfireJobId = table.Column<string>(type: "text", nullable: true),
+                    HangfireJobIdOn = table.Column<string>(type: "text", nullable: true),
+                    HangfireJobIdOff = table.Column<string>(type: "text", nullable: true),
                     IsEnabled = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>

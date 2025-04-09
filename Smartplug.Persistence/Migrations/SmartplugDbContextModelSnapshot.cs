@@ -250,18 +250,10 @@ namespace Smartplug.Persistence.Migrations
                     b.Property<bool>("IsEnabled")
                         .HasColumnType("boolean");
 
-<<<<<<< HEAD
                     b.Property<int?>("RecurringDay")
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("ScheduledTime")
-=======
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("StartTime")
->>>>>>> 97072447e4e2753466a62f642e0c1da60e0ca03d
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<TimeSpan?>("StartTimeOfDay")
