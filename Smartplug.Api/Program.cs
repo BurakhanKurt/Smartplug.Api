@@ -142,8 +142,7 @@ builder.Services.AddSignalR(options =>
 // aksi halde mevcut connection string (örneğin "localDb") üzerinden de çalışacaktır.
 builder.Services.AddHangfire(config =>
     config.UsePostgreSqlStorage(
-        builder.Configuration.GetConnectionString("HangfireConnection") ??
-        builder.Configuration.GetConnectionString("localDb")
+        builder.Configuration.GetConnectionString("HangfireConnection") 
     )
 );
 builder.Services.AddHangfireServer();
