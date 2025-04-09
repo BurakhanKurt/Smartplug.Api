@@ -12,7 +12,7 @@ services:
     networks:
       - app-network
     restart: always
-services:
+
   hangfire-db:
     image: postgres:latest
     container_name: hangfire-db
