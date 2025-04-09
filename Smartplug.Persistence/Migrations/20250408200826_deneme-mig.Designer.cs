@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Smartplug.Persistence;
@@ -11,9 +12,11 @@ using Smartplug.Persistence;
 namespace Smartplug.Persistence.Migrations
 {
     [DbContext(typeof(SmartplugDbContext))]
-    partial class SmartplugDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250408200826_deneme-mig")]
+    partial class denememig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -226,49 +229,21 @@ namespace Smartplug.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<bool?>("DesiredStatus")
-                        .HasColumnType("boolean");
-
                     b.Property<Guid>("DeviceId")
                         .HasColumnType("uuid");
 
-                    b.Property<TimeSpan?>("EndTimeOfDay")
-                        .HasColumnType("interval");
-
-                    b.Property<bool?>("Executed")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("HangfireJobId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("HangfireJobIdOff")
-                        .HasColumnType("text");
-
-                    b.Property<string>("HangfireJobIdOn")
-                        .HasColumnType("text");
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsEnabled")
                         .HasColumnType("boolean");
 
-<<<<<<< HEAD
-                    b.Property<int?>("RecurringDay")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("ScheduledTime")
-=======
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("StartTime")
->>>>>>> 97072447e4e2753466a62f642e0c1da60e0ca03d
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<TimeSpan?>("StartTimeOfDay")
-                        .HasColumnType("interval");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
