@@ -6,7 +6,7 @@ namespace Smartplug.Domain.Entities
 {
     public class Users : IdentityUser<Guid>, IEntityBase
     {
-        public DateTime? CreatedAt { get; set; }//
+        public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeleteDate { get; set; }
         public DateTime? LastLoginDate { get; set; }
