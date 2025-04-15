@@ -7,7 +7,7 @@ using Smartplug.Persistence;
 
 namespace Smartplug.Application.Scoket
 {
-    public class PlugHub(SmartplugDbContext dbContext, ILogger<PlugHub> logger)
+    public class PlugHub(SmartplugDbContext dbContext, ILogger<PlugHub> logger,IHubContext<DeviceHub> hubContext)
         : Hub
     {
         public static ConcurrentDictionary<Guid, string> ConnectedClients { get; private set; } = new();
@@ -27,6 +27,18 @@ namespace Smartplug.Application.Scoket
             await dbContext.Devices.Where(x => x.Id == key)
                 .ExecuteUpdateAsync(s =>
                     s.SetProperty(p => p.IsWorking, status));
+            
+            var userId = await dbContext.Devices
+                .Where(x => x.Id == key)
+                .Select(x => x.UserId)
+                .FirstOrDefaultAsync();
+            
+            var connectionId = DeviceHub.ConnectedClients.FirstOrDefault(x => x.Key == userId).Value;
+            
+            if (connectionId != null)
+            {
+                await hubContext.Clients.Client(connectionId).SendAsync("StatusChangeOnDevice");
+            }
         }
 
         public override async Task OnConnectedAsync()

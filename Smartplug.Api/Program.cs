@@ -179,5 +179,6 @@ app.UseAuthorization();  // Doğru sırada
 app.MapControllers();    // Bu middleware'lerden sonra
 
 app.MapHub<PlugHub>("/plugHub");
+app.MapHub<DeviceHub>("/devicehub");
 
 app.Run();
