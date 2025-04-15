@@ -23,6 +23,7 @@ namespace Smartplug.Application.Scoket
 
         public async Task ChangeStatus(bool status)
         {
+            Console.WriteLine(status);
             var key = ConnectedClients.FirstOrDefault(x => x.Value == Context.ConnectionId).Key;
             await dbContext.Devices.Where(x => x.Id == key)
                 .ExecuteUpdateAsync(s =>
