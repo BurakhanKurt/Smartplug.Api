@@ -30,7 +30,7 @@ public class ScheduleController : ControllerBase
         return Ok(response);
     }
 
-    // Yeni zamanlama ayarı ekleme
+    // Yeni zamanlama ayarı eklemek
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> CreateSchedule([FromBody] CreateScheduleCommand command)
