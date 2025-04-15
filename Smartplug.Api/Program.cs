@@ -171,7 +171,8 @@ if (app.Environment.IsDevelopment() || true)
 app.UseRouting();
 app.UseCors(myAllowSpecificOrigins);
 // Hangfire Dashboard'u ekleyerek job'larınızı yönetmek için arayüz sağlar.
-app.UseHangfireDashboard();
+app.UseHangfireDashboard("/hangfire");
+
 
 app.UseAuthentication(); // Doğru sırada
 app.UseAuthorization();  // Doğru sırada
