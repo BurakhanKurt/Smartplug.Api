@@ -5,12 +5,18 @@ namespace Smartplug.Application.Scoket;
 
 public class DeviceHub : Hub
 {
-    public static ConcurrentDictionary<Guid, string> ConnectedClients { get; private set; } = new();
+    public static ConcurrentDictionary<Guid, List<string>> ConnectedClients { get; private set; } = new();
     
     public async Task AddList(string userId)
     {
-        ConnectedClients.TryRemove(Guid.Parse(userId), out _);
-        ConnectedClients.TryAdd(Guid.Parse(userId), Context.ConnectionId);
+        if (ConnectedClients.TryGetValue(Guid.Parse(userId), out var list))
+        {
+            list.Add(Context.ConnectionId);
+        }
+        else
+        {
+            ConnectedClients.TryAdd(Guid.Parse(userId), new List<string> { Context.ConnectionId });
+        }
         await Clients.Caller.SendAsync("StatusChangeOnDevice");
     }
     
@@ -21,6 +27,13 @@ public class DeviceHub : Hub
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        ConnectedClients.TryRemove(Guid.Parse(Context.ConnectionId), out _);
+        foreach (var item in ConnectedClients)
+        {
+            if (item.Value.Contains(Context.ConnectionId))
+            {
+                item.Value.Remove(Context.ConnectionId);
+            }
+        }
+        await Clients.Caller.SendAsync("StatusChangeOnDevice");
     }
 }

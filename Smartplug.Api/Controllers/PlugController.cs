@@ -19,6 +19,14 @@ namespace Smartplug.Api.Controllers
             var response = await mediator.Send(new GetAllDevicesQuery());
             return CreateActionResultInstance(response);
         }
+        
+        [Authorize]
+        [HttpPut("devices")]
+        public async Task<IActionResult> PutDevice([FromBody] UpdateDeviceCommand command)
+        {
+            var response = await mediator.Send(command);
+            return CreateActionResultInstance(response);
+        }
 
         [HttpPost("assign-user-devices")]
         public async Task<IActionResult> AssignUserDevices([FromBody] AssignUserDevicesCommand command)
@@ -41,7 +49,7 @@ namespace Smartplug.Api.Controllers
             return CreateActionResultInstance(response);
         }
 
-          [Authorize]
+        [Authorize]
         [HttpGet("healty-checkOne")]
         public async Task<IActionResult> PlugChangeStatus()
         {

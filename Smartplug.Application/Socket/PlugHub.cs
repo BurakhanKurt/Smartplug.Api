@@ -34,11 +34,14 @@ namespace Smartplug.Application.Scoket
                 .Select(x => x.UserId)
                 .FirstOrDefaultAsync();
             
-            var connectionId = DeviceHub.ConnectedClients.FirstOrDefault(x => x.Key == userId).Value;
+            var connectionIds = DeviceHub.ConnectedClients.Where(x => x.Key == userId).SelectMany(x => x.Value).ToList();
             
-            if (connectionId != null)
+            if (connectionIds.Any())
             {
-                await hubContext.Clients.Client(connectionId).SendAsync("StatusChangeOnDevice");
+                foreach (var connectionId in connectionIds)
+                {
+                    await hubContext.Clients.Client(connectionId).SendAsync("StatusChangeOnDevice");
+                }
             }
         }
 
