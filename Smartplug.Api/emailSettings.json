@@ -1,8 +1,9 @@
 {
   "EmailOptions": {
-    "From": "mikroblog.devteam@gmail.com",
-    "Psw": "bwuvfuaxyooqteat",
-    "Host": "smtp.gmail.com",
-    "Port": 587
+    "From": "info@smartplug-io.tech",
+    "Psw": "qxx3Rg8NVzGQjYLMhZtP9l4WBEcIbV",
+    "Host": "mail.smartplug-io.tech",
+    "Port": 465,
+    "FromName" : "Smart Plug Bilgi İşlem Ekibi"
   }
 }

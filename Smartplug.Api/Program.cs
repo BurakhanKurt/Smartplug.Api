@@ -34,6 +34,9 @@ else
 }
 
 builder.Configuration.AddJsonFile("jwtSettings.json");
+builder.Configuration.AddJsonFile("emailSettings.json");
+
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailOptions"));
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 
 builder.Services.AddDbContext<SmartplugDbContext>(options =>
