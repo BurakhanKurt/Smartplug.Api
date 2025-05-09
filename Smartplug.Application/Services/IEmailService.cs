@@ -35,7 +35,7 @@ public class EmailService(IOptions<EmailSettings> options, ILogger<EmailService>
         
         try
         {
-            await client.ConnectAsync(emailSettings.Host, emailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
+            await client.ConnectAsync(emailSettings.Host, emailSettings.Port, MailKit.Security.SecureSocketOptions.SslOnConnect);
 
             await client.AuthenticateAsync(emailSettings.From, emailSettings.Psw);
 
