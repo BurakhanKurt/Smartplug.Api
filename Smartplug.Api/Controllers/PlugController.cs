@@ -57,7 +57,7 @@ namespace Smartplug.Api.Controllers
             return Ok();
         }
 
-        [HttpDelete("device{deviceId}")]
+        [HttpDelete("devices/{deviceId}")]
         public async Task<IActionResult> AssignUserDevices([FromRoute] Guid deviceId)
         {
             var response = await mediator.Send(new DeleteDeviceCommand { DeviceId = deviceId });
