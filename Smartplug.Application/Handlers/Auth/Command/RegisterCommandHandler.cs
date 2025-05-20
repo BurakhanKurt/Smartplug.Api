@@ -49,6 +49,7 @@ namespace Smartplug.Application.Handlers.Auth.Command
                 UserName = request.Username,
                 Email = request.Email,
                 IsDeleted = false,
+                SecondPhoneNumber = "",
                 EmailConfirmed = true 
             };
 
