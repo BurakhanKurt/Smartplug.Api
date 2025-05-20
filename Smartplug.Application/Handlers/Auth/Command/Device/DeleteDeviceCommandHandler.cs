@@ -22,14 +22,11 @@ public class DeleteDeviceCommandHandler(
 {
     public async Task<Response<string>> Handle(DeleteDeviceCommand request, CancellationToken cancellationToken)
     {
-        var userId = userAccessor.User.Claims.FirstOrDefault(x => x.Type == "userId")?.Value;
-        if (userId == null)
-            return Response<string>.Fail("error.user.notfound", 401);
 
         var device = await dbContext.Devices
             .Include(x => x.EnergyUsageLogs)
             .Include(x => x.Schedules)
-            .FirstOrDefaultAsync(x => x.Id == request.DeviceId && x.UserId == Guid.Parse(userId), cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == request.DeviceId, cancellationToken);
 
         if (device == null)
             return Response<string>.Fail("error.device.notfound", 404);
