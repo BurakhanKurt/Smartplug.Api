@@ -41,7 +41,7 @@ namespace Smartplug.Api.Controllers
 
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register(RegisterCommand command)
+        public async Task<IActionResult> Register([FromBody] RegisterCommand command)
         {
             var response = await mediator.Send(command);
             return CreateActionResultInstance(response);
