@@ -39,6 +39,14 @@ namespace Smartplug.Api.Controllers
             return CreateActionResultInstance(response);
         }
 
+        [HttpPost("register")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(RegisterCommand command)
+        {
+            var response = await mediator.Send(command);
+            return CreateActionResultInstance(response);
+        }
+
         [HttpGet("refreshToken")]
         public async Task<IActionResult> RefreshToken([FromQuery] RefreshTokenCommand command)
         {
